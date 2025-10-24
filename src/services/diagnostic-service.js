@@ -8,17 +8,40 @@ class DiagnosticService {
   /**
    * Soumettre un diagnostic patient (11 champs)
    * @param {Object} diagnosticData - Données du diagnostic patient
+   * @param {File} imageFile - Fichier image (optionnel)
    * @returns {Promise<Object>} Résultat du diagnostic
    */
-  async submitDiagnosticPatient(diagnosticData) {
+  async submitDiagnosticPatient(diagnosticData, imageFile = null) {
     try {
-      const response = await fetch(`${API_BASE_URL}/diagnostic/`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(diagnosticData),
-      })
+      let response
+
+      if (imageFile) {
+        // Si une image est fournie, utiliser FormData
+        const formData = new FormData()
+
+        // Ajouter les données du diagnostic
+        for (const [key, value] of Object.entries(diagnosticData)) {
+          formData.append(key, value)
+        }
+
+        // Ajouter l'image
+        formData.append('image', imageFile)
+
+        response = await fetch(`${API_BASE_URL}/diagnostic/`, {
+          method: 'POST',
+          body: formData,
+          // Ne pas définir Content-Type, le navigateur le fera automatiquement avec boundary
+        })
+      } else {
+        // Sans image, envoyer en JSON classique
+        response = await fetch(`${API_BASE_URL}/diagnostic/`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(diagnosticData),
+        })
+      }
 
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}))

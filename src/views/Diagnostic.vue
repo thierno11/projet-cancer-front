@@ -37,10 +37,16 @@
           <label class="question-label">
             Quel est votre âge ? <span class="required">*</span>
           </label>
-          <select v-model.number="formData.age" required class="form-select">
-            <option value="" disabled>Sélectionnez votre âge</option>
-            <option v-for="age in ageOptions" :key="age" :value="age">{{ age }} ans</option>
-          </select>
+          <input
+            v-model.number="formData.age"
+            type="number"
+            required
+            class="form-input"
+            placeholder="Ex: 35"
+            min="25"
+            max="85"
+          />
+          <p class="question-help">Âge entre 25 et 85 ans</p>
         </div>
 
         <div class="question-group">
@@ -88,12 +94,10 @@
           <label class="question-label">
             Avez-vous des antécédents familiaux de cancer du sein ? <span class="required">*</span>
           </label>
-          <p class="question-help">
-            (Mère, sœur, fille ou autres parentes du premier degré)
-          </p>
+          <p class="question-help">(Mère, sœur, fille ou autres parentes du premier degré)</p>
           <div class="radio-group-vertical">
             <label class="radio-option-card">
-              <input type="radio" v-model.number="formData.ant_familiaux" :value="0" required />
+              <input type="radio" v-model="formData.ant_familiaux" value="Non" required />
               <span class="radio-custom"></span>
               <div class="radio-text">
                 <span class="radio-label">Non</span>
@@ -101,7 +105,7 @@
               </div>
             </label>
             <label class="radio-option-card">
-              <input type="radio" v-model.number="formData.ant_familiaux" :value="1" required />
+              <input type="radio" v-model="formData.ant_familiaux" value="Oui" required />
               <span class="radio-custom"></span>
               <div class="radio-text">
                 <span class="radio-label">Oui</span>
@@ -118,12 +122,10 @@
             Avez-vous des antécédents personnels de pathologies mammaires ?
             <span class="required">*</span>
           </label>
-          <p class="question-help">
-            (Biopsies, lésions bénignes, hyperplasie atypique, etc.)
-          </p>
+          <p class="question-help">(Biopsies, lésions bénignes, hyperplasie atypique, etc.)</p>
           <div class="radio-group-vertical">
             <label class="radio-option-card">
-              <input type="radio" v-model.number="formData.ant_personnels" :value="0" required />
+              <input type="radio" v-model="formData.ant_personnels" value="Non" required />
               <span class="radio-custom"></span>
               <div class="radio-text">
                 <span class="radio-label">Non</span>
@@ -131,7 +133,7 @@
               </div>
             </label>
             <label class="radio-option-card">
-              <input type="radio" v-model.number="formData.ant_personnels" :value="1" required />
+              <input type="radio" v-model="formData.ant_personnels" value="Oui" required />
               <span class="radio-custom"></span>
               <div class="radio-text">
                 <span class="radio-label">Oui</span>
@@ -156,95 +158,48 @@
             À quel âge avez-vous eu vos premières menstruations ?
             <span class="required">*</span>
           </label>
-          <div class="radio-group-horizontal">
-            <label class="radio-option-inline">
-              <input
-                type="radio"
-                v-model.number="formData.age_premieres_regles"
-                :value="10"
-                required
-              />
-              <span class="radio-custom"></span>
-              <span class="radio-label">≤ 11 ans</span>
-            </label>
-            <label class="radio-option-inline">
-              <input
-                type="radio"
-                v-model.number="formData.age_premieres_regles"
-                :value="12"
-                required
-              />
-              <span class="radio-custom"></span>
-              <span class="radio-label">12-13 ans</span>
-            </label>
-            <label class="radio-option-inline">
-              <input
-                type="radio"
-                v-model.number="formData.age_premieres_regles"
-                :value="14"
-                required
-              />
-              <span class="radio-custom"></span>
-              <span class="radio-label">14-15 ans</span>
-            </label>
-            <label class="radio-option-inline">
-              <input
-                type="radio"
-                v-model.number="formData.age_premieres_regles"
-                :value="16"
-                required
-              />
-              <span class="radio-custom"></span>
-              <span class="radio-label">≥ 16 ans</span>
-            </label>
-          </div>
+          <input
+            v-model.number="formData.age_premieres_regles"
+            type="number"
+            required
+            class="form-input"
+            placeholder="Ex: 13"
+            min="0"
+            max="25"
+          />
+          <p class="question-help">Âge entre 0 et 25 ans</p>
         </div>
 
         <div class="question-group">
           <label class="question-label">
             À quel âge avez-vous eu votre premier enfant (né vivant) ?
-            <span class="required">*</span>
           </label>
-          <select v-model.number="formData.age_premier_enfant" required class="form-select">
-            <option value="" disabled>Sélectionnez une option</option>
-            <option :value="0">Je n'ai pas eu d'enfant</option>
-            <option :value="20">Moins de 20 ans</option>
-            <option :value="22">20-24 ans</option>
-            <option :value="27">25-29 ans</option>
-            <option :value="32">30 ans ou plus</option>
-          </select>
+          <input
+            v-model.number="formData.age_premier_enfant"
+            type="number"
+            class="form-input"
+            placeholder="Laissez vide si vous n'avez pas d'enfant"
+            min="12"
+            max="50"
+          />
+          <p class="question-help">
+            Optionnel - Âge entre 12 et 50 ans (laissez vide si pas d'enfant)
+          </p>
         </div>
 
         <div class="question-group">
           <label class="question-label">
             Combien d'enfants avez-vous eu au total ? <span class="required">*</span>
           </label>
-          <div class="radio-group-horizontal">
-            <label
-              class="radio-option-inline"
-              v-for="n in [0, 1, 2, 3, 4, 5]"
-              :key="n"
-            >
-              <input
-                type="radio"
-                v-model.number="formData.nb_enfants"
-                :value="n"
-                required
-              />
-              <span class="radio-custom"></span>
-              <span class="radio-label">{{ n }}</span>
-            </label>
-            <label class="radio-option-inline">
-              <input
-                type="radio"
-                v-model.number="formData.nb_enfants"
-                :value="6"
-                required
-              />
-              <span class="radio-custom"></span>
-              <span class="radio-label">6+</span>
-            </label>
-          </div>
+          <input
+            v-model.number="formData.nb_enfants"
+            type="number"
+            required
+            class="form-input"
+            placeholder="Ex: 2"
+            min="0"
+          />
+          <p class="question-help">Nombre entier (0 ou plus)</p>
         </div>
       </div>
 
@@ -257,56 +212,32 @@
 
         <div class="question-group">
           <label class="question-label">
-            Comment décririez-vous votre mode de vie général ? <span class="required">*</span>
+            Fumez-vous ou avez-vous fumé régulièrement ? <span class="required">*</span>
           </label>
           <div class="radio-group-vertical">
             <label class="radio-option-card">
-              <input type="radio" v-model="formData.mode_vie" value="sain" required />
+              <input type="radio" v-model="formData.tabac" value="Non-fumeur" required />
               <span class="radio-custom"></span>
               <div class="radio-text">
-                <span class="radio-label">Sain</span>
-                <span class="radio-description">
-                  Alimentation équilibrée, activité physique régulière, pas de tabac ni d'alcool
-                </span>
+                <span class="radio-label">Non-fumeur</span>
+                <span class="radio-description">Je n'ai jamais fumé</span>
               </div>
             </label>
             <label class="radio-option-card">
-              <input type="radio" v-model="formData.mode_vie" value="modéré" required />
+              <input type="radio" v-model="formData.tabac" value="Ex-fumeur" required />
               <span class="radio-custom"></span>
               <div class="radio-text">
-                <span class="radio-label">Modéré</span>
-                <span class="radio-description">
-                  Quelques facteurs de risque présents, effort pour maintenir un mode de vie sain
-                </span>
+                <span class="radio-label">Ex-fumeur</span>
+                <span class="radio-description">J'ai arrêté de fumer</span>
               </div>
             </label>
             <label class="radio-option-card">
-              <input type="radio" v-model="formData.mode_vie" value="à risque" required />
+              <input type="radio" v-model="formData.tabac" value="Fumeur" required />
               <span class="radio-custom"></span>
               <div class="radio-text">
-                <span class="radio-label">À risque</span>
-                <span class="radio-description">
-                  Plusieurs facteurs de risque présents (sédentarité, tabac, alcool, etc.)
-                </span>
+                <span class="radio-label">Fumeur</span>
+                <span class="radio-description">Je fume actuellement</span>
               </div>
-            </label>
-          </div>
-        </div>
-
-        <div class="question-group">
-          <label class="question-label">
-            Fumez-vous ou avez-vous fumé régulièrement ? <span class="required">*</span>
-          </label>
-          <div class="radio-group-horizontal">
-            <label class="radio-option-inline">
-              <input type="radio" v-model.number="formData.tabac" :value="0" required />
-              <span class="radio-custom"></span>
-              <span class="radio-label">Non</span>
-            </label>
-            <label class="radio-option-inline">
-              <input type="radio" v-model.number="formData.tabac" :value="1" required />
-              <span class="radio-custom"></span>
-              <span class="radio-label">Oui</span>
             </label>
           </div>
         </div>
@@ -315,17 +246,38 @@
           <label class="question-label">
             Consommez-vous de l'alcool régulièrement ? <span class="required">*</span>
           </label>
-          <p class="question-help">(Plus de 3 verres par semaine)</p>
-          <div class="radio-group-horizontal">
-            <label class="radio-option-inline">
-              <input type="radio" v-model.number="formData.alcool" :value="0" required />
+          <div class="radio-group-vertical">
+            <label class="radio-option-card">
+              <input type="radio" v-model="formData.alcool" value="Aucune" required />
               <span class="radio-custom"></span>
-              <span class="radio-label">Non</span>
+              <div class="radio-text">
+                <span class="radio-label">Aucune</span>
+                <span class="radio-description">Je ne consomme pas d'alcool</span>
+              </div>
             </label>
-            <label class="radio-option-inline">
-              <input type="radio" v-model.number="formData.alcool" :value="1" required />
+            <label class="radio-option-card">
+              <input type="radio" v-model="formData.alcool" value="Occasionnelle" required />
               <span class="radio-custom"></span>
-              <span class="radio-label">Oui</span>
+              <div class="radio-text">
+                <span class="radio-label">Occasionnelle</span>
+                <span class="radio-description">Moins de 3 verres par semaine</span>
+              </div>
+            </label>
+            <label class="radio-option-card">
+              <input type="radio" v-model="formData.alcool" value="Modérée" required />
+              <span class="radio-custom"></span>
+              <div class="radio-text">
+                <span class="radio-label">Modérée</span>
+                <span class="radio-description">3 à 7 verres par semaine</span>
+              </div>
+            </label>
+            <label class="radio-option-card">
+              <input type="radio" v-model="formData.alcool" value="Élevée" required />
+              <span class="radio-custom"></span>
+              <div class="radio-text">
+                <span class="radio-label">Élevée</span>
+                <span class="radio-description">Plus de 7 verres par semaine</span>
+              </div>
             </label>
           </div>
         </div>
@@ -339,38 +291,36 @@
               <input
                 type="radio"
                 v-model="formData.activite_physique"
-                value="faible"
+                value="Sédentaire"
                 required
               />
               <span class="radio-custom"></span>
               <div class="radio-text">
-                <span class="radio-label">Faible</span>
+                <span class="radio-label">Sédentaire</span>
+                <span class="radio-description">Très peu ou pas d'exercice</span>
+              </div>
+            </label>
+            <label class="radio-option-card">
+              <input type="radio" v-model="formData.activite_physique" value="Légère" required />
+              <span class="radio-custom"></span>
+              <div class="radio-text">
+                <span class="radio-label">Légère</span>
                 <span class="radio-description">Moins de 30 minutes d'exercice par semaine</span>
               </div>
             </label>
             <label class="radio-option-card">
-              <input
-                type="radio"
-                v-model="formData.activite_physique"
-                value="moyen"
-                required
-              />
+              <input type="radio" v-model="formData.activite_physique" value="Modérée" required />
               <span class="radio-custom"></span>
               <div class="radio-text">
-                <span class="radio-label">Moyen</span>
+                <span class="radio-label">Modérée</span>
                 <span class="radio-description">30 minutes à 2 heures d'exercice par semaine</span>
               </div>
             </label>
             <label class="radio-option-card">
-              <input
-                type="radio"
-                v-model="formData.activite_physique"
-                value="élevé"
-                required
-              />
+              <input type="radio" v-model="formData.activite_physique" value="Intense" required />
               <span class="radio-custom"></span>
               <div class="radio-text">
-                <span class="radio-label">Élevé</span>
+                <span class="radio-label">Intense</span>
                 <span class="radio-description">Plus de 2 heures d'exercice par semaine</span>
               </div>
             </label>
@@ -386,9 +336,7 @@
 
       <!-- Boutons d'action -->
       <div class="form-actions">
-        <button type="button" @click="resetForm" class="btn btn-secondary">
-          Réinitialiser
-        </button>
+        <button type="button" @click="resetForm" class="btn btn-secondary">Réinitialiser</button>
         <button type="submit" class="btn btn-primary" :disabled="isSubmitting">
           <span v-if="!isSubmitting">Calculer mon risque</span>
           <span v-else class="loading">
@@ -406,30 +354,86 @@
           <button class="close-btn" @click="closeResults">✕</button>
 
           <div class="result-container">
-            <!-- Icône de risque -->
-            <div
-              class="result-icon"
-              :class="{
-                'high-risk': riskLevel === 'high',
-                'moderate-risk': riskLevel === 'moderate',
-                'low-risk': riskLevel === 'low',
-              }"
-            >
-              <span class="material-icons">{{ riskLevel === 'high' ? 'warning' : riskLevel === 'moderate' ? 'bolt' : 'check_circle' }}</span>
+            <!-- Icône de risque avec couleur dynamique -->
+            <div class="result-icon" :style="{ backgroundColor: riskCategory?.color || '#10b981' }">
+              <span class="material-icons">{{ riskCategory?.icon || 'check_circle' }}</span>
             </div>
 
-            <h2 class="result-title">
-              {{
-                riskLevel === 'high'
-                  ? 'Risque Élevé Détecté'
-                  : riskLevel === 'moderate'
-                    ? 'Risque Modéré'
-                    : 'Risque Faible'
-              }}
-            </h2>
+            <h2 class="result-title">{{ riskCategory?.category || 'Évaluation du risque' }}</h2>
+
+            <!-- Score de risque en pourcentage -->
+            <div class="risk-percentage">
+              <div class="percentage-value">{{ riskScore }}%</div>
+              <div class="percentage-label">Risque prédit</div>
+            </div>
+
+            <!-- Interprétation clinique -->
+            <div v-if="riskCategory" class="clinical-interpretation">
+              <div class="interpretation-header">
+                <span class="material-icons">medical_information</span>
+                <h3>Interprétation Clinique</h3>
+              </div>
+              <p class="interpretation-text">{{ riskCategory.interpretation }}</p>
+            </div>
+
+            <!-- Recommandations médicales -->
+            <div v-if="riskCategory" class="medical-recommendations">
+              <div class="recommendations-header">
+                <span class="material-icons">local_hospital</span>
+                <h3>Recommandations Médicales</h3>
+              </div>
+              <p class="recommendations-text">{{ riskCategory.recommendations }}</p>
+            </div>
+
+            <!-- Message d'analyse -->
+            <div v-if="analysisMessage" class="analysis-message">
+              <span class="material-icons">info</span>
+              {{ analysisMessage }}
+            </div>
+
+            <!-- Images d'analyse -->
+            <div v-if="imageWithBoxes || maskImage" class="analysis-images">
+              <h3 class="analysis-images-title">
+                <span class="material-icons">image_search</span>
+                Résultats de l'analyse d'image
+              </h3>
+
+              <div class="images-grid">
+                <!-- Image avec détections -->
+                <div v-if="imageWithBoxes" class="analysis-image-card">
+                  <div class="image-card-header">
+                    <span class="material-icons">gps_fixed</span>
+                    <span>Zones détectées</span>
+                    <span v-if="numDetections !== null" class="detection-badge">
+                      {{ numDetections }} zone(s)
+                    </span>
+                  </div>
+                  <img
+                    :src="imageWithBoxes"
+                    alt="Image avec zones détectées"
+                    class="analysis-image"
+                  />
+                  <p class="image-description">
+                    Les rectangles rouges indiquent les zones suspectes identifiées par l'IA
+                  </p>
+                </div>
+
+                <!-- Masque de segmentation -->
+                <div v-if="maskImage" class="analysis-image-card">
+                  <div class="image-card-header">
+                    <span class="material-icons">layers</span>
+                    <span>Masque de segmentation</span>
+                  </div>
+                  <img :src="maskImage" alt="Masque de segmentation" class="analysis-image" />
+                  <p class="image-description">
+                    Visualisation précise des régions d'intérêt identifiées
+                  </p>
+                </div>
+              </div>
+            </div>
 
             <!-- Score de risque -->
-            <div class="risk-score">
+            <!-- <div class="risk-score">
               <div class="score-label">Score de risque global</div>
               <div
                 class="score-value"
@@ -452,20 +456,16 @@
                   :style="{ width: `${riskScore}%` }"
                 ></div>
               </div>
-            </div>
+            </div> -->
 
             <!-- Détails des facteurs de risque -->
-            <div class="risk-factors" v-if="identifiedFactors.length > 0">
+            <!-- <div class="risk-factors" v-if="identifiedFactors.length > 0">
               <h3 class="factors-title">
                 <span class="material-icons icon">analytics</span>
                 Facteurs de risque identifiés
               </h3>
               <div class="factors-list">
-                <div
-                  v-for="(factor, index) in identifiedFactors"
-                  :key="index"
-                  class="factor-item"
-                >
+                <div v-for="(factor, index) in identifiedFactors" :key="index" class="factor-item">
                   <span class="factor-icon">{{ factor.icon }}</span>
                   <div class="factor-info">
                     <div class="factor-name">{{ factor.name }}</div>
@@ -473,10 +473,10 @@
                   </div>
                 </div>
               </div>
-            </div>
+            </div> -->
 
             <!-- Recommandations d'examens -->
-            <div class="recommendations">
+            <!-- <div class="recommendations">
               <h3 class="recommendations-title">
                 <span class="material-icons icon">local_hospital</span>
                 Examens recommandés
@@ -498,19 +498,19 @@
                   <div class="recommendation-urgency">{{ recommendation.urgency }}</div>
                 </div>
               </div>
-            </div>
+            </div> -->
 
             <!-- Conseils -->
-            <div class="advice-box">
+            <!-- <div class="advice-box">
               <h3 class="advice-title">
                 <span class="icon">💡</span>
                 Recommandations médicales
               </h3>
               <p class="advice-text">{{ adviceText }}</p>
-            </div>
+            </div> -->
 
             <!-- Actions -->
-            <div class="modal-actions">
+            <!-- <div class="modal-actions">
               <RouterLink
                 v-if="riskLevel !== 'low'"
                 to="/analyse"
@@ -525,17 +525,9 @@
                 Télécharger le rapport
               </button>
               <button @click="closeResults" class="btn btn-secondary">Fermer</button>
-            </div>
+            </div> -->
 
             <!-- Disclaimer -->
-            <div class="disclaimer">
-              <p>
-                <strong>Avertissement :</strong> Cette évaluation est fournie à titre informatif
-                uniquement. Elle ne constitue pas un diagnostic médical et ne remplace pas la
-                consultation d'un professionnel de santé. Consultez toujours votre médecin pour
-                toute question concernant votre santé.
-              </p>
-            </div>
           </div>
         </div>
       </div>
@@ -544,48 +536,39 @@
 </template>
 
 <script setup>
-import { ref, reactive, computed } from 'vue'
+import { ref, reactive } from 'vue'
 import diagnosticService from '@/services/diagnostic-service'
 
 const isSubmitting = ref(false)
 const showResults = ref(false)
 const riskLevel = ref('') // 'low', 'moderate', 'high'
 const riskScore = ref(0)
+const riskCategory = ref(null) // Catégorie détaillée du risque
 const apiError = ref('')
 const apiResponse = ref(null)
 const identifiedFactors = ref([])
 const recommendations = ref([])
 const adviceText = ref('')
 
-// Options d'âge (18-85 ans)
-const ageOptions = computed(() => {
-  const ages = []
-  for (let i = 18; i <= 85; i++) {
-    ages.push(i)
-  }
-  return ages
-})
-
 const formData = reactive({
   // Informations personnelles
-  age: null,
+  age: null, // 25-85
   poids: null,
   taille: null,
 
   // Antécédents
-  ant_familiaux: null, // 0 ou 1
-  ant_personnels: null, // 0 ou 1
+  ant_familiaux: '', // "Oui" ou "Non"
+  ant_personnels: '', // "Oui" ou "Non"
 
   // Historique reproductif
-  age_premieres_regles: null,
-  age_premier_enfant: null,
-  nb_enfants: 0,
+  age_premieres_regles: null, // 0-25
+  age_premier_enfant: null, // 12-50 (optionnel)
+  nb_enfants: 0, // ≥ 0
 
   // Mode de vie
-  mode_vie: '', // "sain", "modéré", "à risque"
-  tabac: null, // 0 ou 1
-  alcool: null, // 0 ou 1
-  activite_physique: '', // "faible", "moyen", "élevé"
+  tabac: '', // "Non-fumeur", "Ex-fumeur", "Fumeur"
+  alcool: '', // "Aucune", "Occasionnelle", "Modérée", "Élevée"
+  activite_physique: '', // "Sédentaire", "Légère", "Modérée", "Intense"
 })
 
 const calculerIMC = () => {
@@ -597,44 +580,114 @@ const calculerIMC = () => {
   return 0
 }
 
+// Déterminer la catégorie de risque selon les intervalles médicaux
+const getRiskCategory = (riskPercent) => {
+  if (riskPercent <= 2) {
+    return {
+      level: 'very-low',
+      category: 'Risque très faible',
+      interpretation: 'Probabilité minimale, comparable à la population générale.',
+      recommendations:
+        'Surveillance standard (autopalpation, mammographie selon âge et protocole national).',
+      color: '#10b981', // green
+      icon: 'check_circle',
+    }
+  } else if (riskPercent <= 5) {
+    return {
+      level: 'low',
+      category: 'Risque faible',
+      interpretation: "Légère augmentation du risque, sans nécessité d'imagerie supplémentaire.",
+      recommendations:
+        'Suivi de routine, conseils de prévention (hygiène de vie, dépistage régulier).',
+      color: '#22c55e', // light green
+      icon: 'verified',
+    }
+  } else if (riskPercent <= 10) {
+    return {
+      level: 'moderate',
+      category: 'Risque modéré',
+      interpretation: 'Risque non négligeable. Peut traduire des facteurs familiaux ou hormonaux.',
+      recommendations:
+        'Échographie mammaire de contrôle recommandée pour investigation complémentaire.',
+      color: '#f59e0b', // orange
+      icon: 'warning',
+    }
+  } else if (riskPercent <= 15) {
+    return {
+      level: 'significant',
+      category: 'Risque significatif',
+      interpretation: 'Risque supérieur à la moyenne, justifiant une surveillance renforcée.',
+      recommendations:
+        'Imagerie complémentaire (échographie + mammographie rapprochée) selon protocole.',
+      color: '#f97316', // dark orange
+      icon: 'priority_high',
+    }
+  } else if (riskPercent <= 20) {
+    return {
+      level: 'high',
+      category: 'Risque élevé',
+      interpretation: 'Niveau de risque justifiant une évaluation spécialisée.',
+      recommendations:
+        "IRM mammaire et consultation dans un centre de référence ou d'oncogénétique.",
+      color: '#ef4444', // red
+      icon: 'error',
+    }
+  } else {
+    return {
+      level: 'very-high',
+      category: 'Risque très élevé',
+      interpretation: 'Risque multiplié par rapport à la population générale.',
+      recommendations:
+        'Suivi personnalisé : IRM annuelle, test génétique, prise en charge oncogénétique spécialisée.',
+      color: '#dc2626', // dark red
+      icon: 'dangerous',
+    }
+  }
+}
+
 const handleSubmit = async () => {
   isSubmitting.value = true
   apiError.value = ''
 
   try {
-    // Formater les données pour l'API
-    const diagnosticData = diagnosticService.formatPatientData(formData)
+    // Calculer l'IMC
+    const imc = calculerIMC()
 
-    // Valider les données
-    const validation = diagnosticService.validatePatientData(diagnosticData)
-    if (!validation.isValid) {
-      apiError.value = validation.errors.join(', ')
-      isSubmitting.value = false
-      return
+    // Formater les données pour l'API
+    const diagnosticData = {
+      age: formData.age,
+      imc: parseFloat(imc),
+      ant_familiaux: formData.ant_familiaux,
+      ant_personnels: formData.ant_personnels,
+      age_premieres_regles: formData.age_premieres_regles,
+      age_premier_enfant: formData.age_premier_enfant || null,
+      nb_enfants: formData.nb_enfants,
+      tabac: formData.tabac,
+      alcool: formData.alcool,
+      activite_physique: formData.activite_physique,
     }
 
-    console.log('Envoi des données à l\'API:', diagnosticData)
+    console.log("Envoi des données à l'API:", diagnosticData)
 
-    // Envoyer les données à l'API
+    // Envoyer les données à l'API (sans image pour ce formulaire)
     const response = await diagnosticService.submitDiagnosticPatient(diagnosticData)
 
-    console.log('Réponse de l\'API:', response)
+    console.log("Réponse de l'API:", response)
     apiResponse.value = response.data
 
-    // Utiliser les résultats de l'API si disponibles
-    if (response.data && response.data.risque !== undefined) {
-      riskScore.value = Math.round(response.data.risque * 100) // Supposant que l'API retourne entre 0 et 1
+    // Traiter la réponse du backend
+    if (response.data && response.data.score_risque !== undefined) {
+      // Utiliser le score de risque du backend (en pourcentage)
+      riskScore.value = response.data.score_risque
 
-      // Déterminer le niveau de risque
-      if (riskScore.value < 30) {
-        riskLevel.value = 'low'
-      } else if (riskScore.value < 60) {
-        riskLevel.value = 'moderate'
-      } else {
-        riskLevel.value = 'high'
-      }
+      // Obtenir la catégorie de risque détaillée
+      riskCategory.value = getRiskCategory(riskScore.value)
+      riskLevel.value = riskCategory.value.level
+
+      // Mettre à jour le texte de conseil basé sur la catégorie
+      adviceText.value = riskCategory.value.recommendations
     } else {
-      // Fallback: calculer le risque localement si l'API ne retourne pas de score
+      // Fallback: calculer le risque localement
       calculateRisk()
     }
 
@@ -694,7 +747,11 @@ const calculateRisk = () => {
   // 4. Antécédents personnels (0-15 points)
   if (formData.ant_personnels === 1) {
     score += 15
-    factors.push({ name: 'Antécédents personnels de pathologies mammaires', impact: 'Élevé', icon: '🏥' })
+    factors.push({
+      name: 'Antécédents personnels de pathologies mammaires',
+      impact: 'Élevé',
+      icon: '🏥',
+    })
   }
 
   // 5. Âge premières règles (0-8 points)
@@ -715,7 +772,11 @@ const calculateRisk = () => {
   // 7. Nombre d'enfants (bonus si élevé)
   if (formData.nb_enfants >= 3) {
     score -= 3
-    factors.push({ name: 'Plusieurs enfants (facteur protecteur)', impact: 'Protecteur', icon: '👨‍👩‍👧‍👦' })
+    factors.push({
+      name: 'Plusieurs enfants (facteur protecteur)',
+      impact: 'Protecteur',
+      icon: '👨‍👩‍👧‍👦',
+    })
   }
 
   // 8. Mode de vie (0-10 points)
@@ -738,7 +799,7 @@ const calculateRisk = () => {
   // 10. Alcool (0-6 points)
   if (formData.alcool === 1) {
     score += 6
-    factors.push({ name: 'Consommation régulière d\'alcool', impact: 'Modéré', icon: '🍷' })
+    factors.push({ name: "Consommation régulière d'alcool", impact: 'Modéré', icon: '🍷' })
   }
 
   // 11. Activité physique (bonus si élevée)
@@ -761,7 +822,7 @@ const calculateRisk = () => {
   } else if (riskScore.value >= 30) {
     riskLevel.value = 'moderate'
     adviceText.value =
-      'Votre évaluation indique un risque modéré. Nous vous recommandons de consulter votre médecin pour discuter d\'un suivi régulier et d\'examens de dépistage adaptés à votre profil de risque.'
+      "Votre évaluation indique un risque modéré. Nous vous recommandons de consulter votre médecin pour discuter d'un suivi régulier et d'examens de dépistage adaptés à votre profil de risque."
   } else {
     riskLevel.value = 'low'
     adviceText.value =
@@ -861,14 +922,13 @@ const resetForm = () => {
   formData.age = null
   formData.poids = null
   formData.taille = null
-  formData.ant_familiaux = null
-  formData.ant_personnels = null
+  formData.ant_familiaux = ''
+  formData.ant_personnels = ''
   formData.age_premieres_regles = null
   formData.age_premier_enfant = null
   formData.nb_enfants = 0
-  formData.mode_vie = ''
-  formData.tabac = null
-  formData.alcool = null
+  formData.tabac = ''
+  formData.alcool = ''
   formData.activite_physique = ''
 }
 
@@ -1115,6 +1175,115 @@ const downloadReport = () => {
   font-weight: 800;
   color: #2563eb;
   font-size: 1.1rem;
+}
+
+/* Image Upload */
+.image-upload-container {
+  margin-top: 1rem;
+}
+
+.file-input {
+  display: none;
+}
+
+.file-label {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  padding: 2rem;
+  border: 2px dashed #cbd5e1;
+  border-radius: 12px;
+  background: #f8fafc;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.file-label:hover {
+  border-color: #2563eb;
+  background: #eff6ff;
+}
+
+.upload-icon {
+  font-size: 3rem;
+  color: #64748b;
+}
+
+.file-label:hover .upload-icon {
+  color: #2563eb;
+}
+
+.upload-text {
+  font-weight: 600;
+  color: #475569;
+  font-size: 1rem;
+}
+
+.image-preview-container {
+  position: relative;
+  margin-top: 1.5rem;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #f8fafc;
+  padding: 1rem;
+}
+
+.image-preview {
+  width: 100%;
+  max-height: 400px;
+  object-fit: contain;
+  border-radius: 8px;
+}
+
+.remove-image-btn {
+  position: absolute;
+  top: 1.5rem;
+  right: 1.5rem;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(239, 68, 68, 0.9);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.remove-image-btn:hover {
+  background: rgb(239, 68, 68);
+  transform: scale(1.1);
+}
+
+.remove-image-btn .material-icons {
+  font-size: 1.25rem;
+}
+
+.image-info {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-top: 1rem;
+  padding: 0.75rem;
+  background: white;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  color: #475569;
+}
+
+.image-info .material-icons {
+  color: #2563eb;
+  font-size: 1.25rem;
+}
+
+.image-size {
+  margin-left: auto;
+  font-weight: 600;
+  color: #64748b;
 }
 
 /* Radio Groups - Vertical (Card Style) */
@@ -1556,6 +1725,209 @@ const downloadReport = () => {
 
 .score-fill.low {
   background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+}
+
+/* Risk Percentage Display */
+.risk-percentage {
+  padding: 2.5rem 2rem;
+  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+  border-radius: 16px;
+  margin: 2rem 0;
+  text-align: center;
+  border: 2px solid #e2e8f0;
+}
+
+.percentage-value {
+  font-size: 4rem;
+  font-weight: 900;
+  line-height: 1;
+  margin-bottom: 0.5rem;
+  background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.percentage-label {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+}
+
+/* Clinical Interpretation Section */
+.clinical-interpretation {
+  margin: 2rem 0;
+  padding: 2rem;
+  background: #eff6ff;
+  border-left: 4px solid #2563eb;
+  border-radius: 12px;
+  text-align: left;
+}
+
+.interpretation-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.interpretation-header .material-icons {
+  color: #2563eb;
+  font-size: 1.75rem;
+}
+
+.interpretation-header h3 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #1e293b;
+  margin: 0;
+}
+
+.interpretation-text {
+  font-size: 1rem;
+  line-height: 1.7;
+  color: #475569;
+  margin: 0;
+  font-weight: 500;
+}
+
+/* Medical Recommendations Section */
+.medical-recommendations {
+  margin: 2rem 0;
+  padding: 2rem;
+  background: #fef3c7;
+  border-left: 4px solid #f59e0b;
+  border-radius: 12px;
+  text-align: left;
+}
+
+.recommendations-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.recommendations-header .material-icons {
+  color: #f59e0b;
+  font-size: 1.75rem;
+}
+
+.recommendations-header h3 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #1e293b;
+  margin: 0;
+}
+
+.recommendations-text {
+  font-size: 1rem;
+  line-height: 1.7;
+  color: #475569;
+  margin: 0;
+  font-weight: 600;
+}
+
+/* Analysis Message */
+.analysis-message {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem 1.5rem;
+  background: #eff6ff;
+  border-left: 4px solid #2563eb;
+  border-radius: 8px;
+  margin: 1.5rem 0;
+  font-weight: 500;
+  color: #1e40af;
+}
+
+.analysis-message .material-icons {
+  color: #2563eb;
+  font-size: 1.5rem;
+}
+
+/* Analysis Images */
+.analysis-images {
+  margin: 2rem 0;
+  padding: 2rem;
+  background: #f8fafc;
+  border-radius: 12px;
+}
+
+.analysis-images-title {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #1e293b;
+  margin-bottom: 1.5rem;
+}
+
+.analysis-images-title .material-icons {
+  color: #2563eb;
+  font-size: 1.75rem;
+}
+
+.images-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+.analysis-image-card {
+  background: white;
+  border-radius: 12px;
+  padding: 1rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
+}
+
+.analysis-image-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+}
+
+.image-card-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+  font-weight: 600;
+  color: #1e293b;
+}
+
+.image-card-header .material-icons {
+  color: #2563eb;
+  font-size: 1.25rem;
+}
+
+.detection-badge {
+  margin-left: auto;
+  padding: 0.25rem 0.75rem;
+  background: #dc2626;
+  color: white;
+  border-radius: 12px;
+  font-size: 0.875rem;
+  font-weight: 700;
+}
+
+.analysis-image {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+  border: 2px solid #e2e8f0;
+  margin-bottom: 0.75rem;
+}
+
+.image-description {
+  font-size: 0.875rem;
+  color: #64748b;
+  line-height: 1.5;
+  margin: 0;
 }
 
 /* Risk Factors */

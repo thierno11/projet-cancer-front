@@ -2,25 +2,37 @@
   <div class="analyse-page">
     <!-- Header -->
     <div class="page-header">
-      <RouterLink to="/diagnostic" class="back-link">
+      <!-- <RouterLink to="/diagnostic" class="back-link">
         <span class="back-icon">←</span>
         Retour au diagnostic
-      </RouterLink>
+      </RouterLink> -->
       <h1 class="page-title">Analyse de Mammographie</h1>
       <p class="page-subtitle">Téléversez vos images de mammographie pour une analyse par IA</p>
     </div>
 
     <!-- Section d'upload -->
-    <div v-if="!isAnalyzing && !showResults && !showRiskForm" class="upload-section">
+    <div v-if="!isAnalyzing && !showResults" class="upload-section">
       <div class="upload-container">
         <div class="upload-info">
-          <div class="info-icon">📋</div>
+          <span class="material-icons info-icon">assignment</span>
           <h2 class="info-title">Consignes importantes</h2>
           <ul class="info-list">
-            <li>✓ Images de mammographie uniquement (format DICOM, JPG, PNG)</li>
-            <li>✓ Images claires et de bonne qualité</li>
-            <li>✓ Vous pouvez téléverser plusieurs vues (CC et MLO)</li>
-            <li>✓ Taille maximale par fichier : 10 MB</li>
+            <li>
+              <span class="material-icons list-icon">check_circle</span> Images de mammographie
+              uniquement (format DICOM, JPG, PNG)
+            </li>
+            <li>
+              <span class="material-icons list-icon">check_circle</span> Images claires et de bonne
+              qualité
+            </li>
+            <li>
+              <span class="material-icons list-icon">check_circle</span> Vous pouvez téléverser
+              plusieurs vues (CC et MLO)
+            </li>
+            <li>
+              <span class="material-icons list-icon">check_circle</span> Taille maximale par fichier
+              : 10 MB
+            </li>
           </ul>
         </div>
 
@@ -42,7 +54,7 @@
           />
 
           <div v-if="uploadedImages.length === 0" class="drop-zone-content">
-            <div class="upload-icon-large">📤</div>
+            <span class="material-icons upload-icon-large">cloud_upload</span>
             <h3 class="upload-title">Glissez vos images ici</h3>
             <p class="upload-text">ou</p>
             <label for="imageUpload" class="upload-btn"> Parcourir les fichiers </label>
@@ -58,14 +70,16 @@
                 class="preview-img"
               />
               <div v-else class="preview-placeholder">
-                <span class="file-icon">📄</span>
+                <span class="material-icons file-icon">description</span>
                 <span class="file-type">{{ getFileExtension(image.name) }}</span>
               </div>
               <div class="image-info">
                 <span class="image-name">{{ image.name }}</span>
                 <span class="image-size">{{ formatFileSize(image.size) }}</span>
               </div>
-              <button type="button" @click="removeImage(index)" class="remove-btn">✕</button>
+              <button type="button" @click="removeImage(index)" class="remove-btn">
+                <span class="material-icons">close</span>
+              </button>
             </div>
 
             <label for="imageUpload" class="add-more-btn">
@@ -77,208 +91,12 @@
 
         <div v-if="uploadedImages.length > 0" class="action-buttons">
           <button @click="clearAll" class="btn btn-secondary">Tout supprimer</button>
-          <button @click="showRiskFormStep" class="btn btn-primary btn-large">
-            <span class="btn-icon">📝</span>
-            Suivant: Informations de santé
+          <button @click="startAnalysis" class="btn btn-primary btn-large">
+            <span class="material-icons btn-icon">biotech</span>
+            Lancer l'analyse
             <span class="btn-arrow">→</span>
           </button>
         </div>
-      </div>
-    </div>
-
-    <!-- Section du formulaire de risque -->
-    <div v-if="showRiskForm && !isAnalyzing && !showResults" class="risk-form-section">
-      <div class="form-container">
-        <div class="form-header">
-          <button @click="backToUpload" class="back-link">
-            <span class="back-icon">←</span>
-            Retour aux images
-          </button>
-          <h2 class="form-title">Informations de Santé</h2>
-          <p class="form-subtitle">
-            Ces informations nous aident à évaluer votre risque de cancer du sein
-          </p>
-        </div>
-
-        <form @submit.prevent="submitForm" class="risk-form">
-          <!-- Age -->
-          <div class="form-group">
-            <label for="age" class="form-label">
-              <span class="label-icon">🎂</span>
-              Âge
-              <span class="required">*</span>
-            </label>
-            <input
-              type="number"
-              id="age"
-              v-model.number="formData.age"
-              min="18"
-              max="120"
-              required
-              class="form-input"
-              placeholder="Ex: 45"
-            />
-          </div>
-
-          <!-- IMC -->
-          <div class="form-group">
-            <label for="imc" class="form-label">
-              <span class="label-icon">⚖️</span>
-              Indice de Masse Corporelle (IMC)
-              <span class="required">*</span>
-            </label>
-            <input
-              type="number"
-              id="imc"
-              v-model.number="formData.imc"
-              min="10"
-              max="60"
-              step="0.1"
-              required
-              class="form-input"
-              placeholder="Ex: 24.5"
-            />
-            <small class="form-hint">Calculé à partir de votre poids et taille</small>
-          </div>
-
-          <!-- Antécédents familiaux -->
-          <div class="form-group">
-            <label for="ant_familiaux" class="form-label">
-              <span class="label-icon">👨‍👩‍👧‍👦</span>
-              Antécédents familiaux de cancer du sein
-              <span class="required">*</span>
-            </label>
-            <select id="ant_familiaux" v-model="formData.ant_familiaux" required class="form-select">
-              <option value="" disabled>Sélectionnez une option</option>
-              <option value="0">Non, aucun antécédent</option>
-              <option value="1">Oui, dans ma famille</option>
-            </select>
-          </div>
-
-          <!-- Mutations génétiques -->
-          <div class="form-group">
-            <label for="mutations_genetiques" class="form-label">
-              <span class="label-icon">🧬</span>
-              Statut génétique / Mutations (BRCA1, BRCA2)
-              <span class="required">*</span>
-            </label>
-            <select
-              id="mutations_genetiques"
-              v-model="formData.mutations_genetiques"
-              required
-              class="form-select"
-            >
-              <option value="" disabled>Sélectionnez une option</option>
-              <option value="0">Sain (aucune mutation détectée)</option>
-              <option value="1">Mutations détectées (BRCA1/BRCA2)</option>
-            </select>
-          </div>
-
-          <!-- Mode de vie -->
-          <div class="form-group">
-            <label for="mode_vie" class="form-label">
-              <span class="label-icon">🏃‍♀️</span>
-              Mode de vie / Niveau de risque
-              <span class="required">*</span>
-            </label>
-            <select id="mode_vie" v-model="formData.mode_vie" required class="form-select">
-              <option value="" disabled>Sélectionnez une option</option>
-              <option value="sain">Sain (mode de vie équilibré)</option>
-              <option value="modéré">Modéré (quelques facteurs de risque)</option>
-              <option value="à risque">À risque (plusieurs facteurs de risque)</option>
-            </select>
-          </div>
-
-          <!-- Densité mammaire -->
-          <div class="form-group">
-            <label for="densite_mammaire" class="form-label">
-              <span class="label-icon">🔬</span>
-              Densité mammaire (Classification BI-RADS)
-              <span class="required">*</span>
-            </label>
-            <select
-              id="densite_mammaire"
-              v-model="formData.densite_mammaire"
-              required
-              class="form-select"
-            >
-              <option value="" disabled>Sélectionnez une option</option>
-              <option value="A">A - Presque entièrement graisseuse</option>
-              <option value="B">B - Densités fibroglandulaires dispersées</option>
-              <option value="C">C - Densité hétérogène</option>
-              <option value="D">D - Extrêmement dense</option>
-            </select>
-          </div>
-
-          <!-- Tabac -->
-          <div class="form-group">
-            <label for="tabac" class="form-label">
-              <span class="label-icon">🚬</span>
-              Consommation de tabac
-              <span class="required">*</span>
-            </label>
-            <select id="tabac" v-model="formData.tabac" required class="form-select">
-              <option value="" disabled>Sélectionnez une option</option>
-              <option value="0">Non-fumeur</option>
-              <option value="1">Fumeur occasionnel</option>
-              <option value="2">Fumeur régulier</option>
-            </select>
-          </div>
-
-          <!-- Alcool -->
-          <div class="form-group">
-            <label for="alcool" class="form-label">
-              <span class="label-icon">🍷</span>
-              Consommation d'alcool
-              <span class="required">*</span>
-            </label>
-            <select id="alcool" v-model="formData.alcool" required class="form-select">
-              <option value="" disabled>Sélectionnez une option</option>
-              <option value="0">Jamais ou rarement</option>
-              <option value="1">Occasionnellement (1-3 verres/semaine)</option>
-              <option value="2">Régulièrement (4-7 verres/semaine)</option>
-              <option value="3">Fréquemment (>7 verres/semaine)</option>
-            </select>
-          </div>
-
-          <!-- Score de risque (affiché après calcul) -->
-          <div v-if="formData.score_risque !== null" class="form-group score-display">
-            <div class="risk-score-card">
-              <div class="score-header">
-                <span class="label-icon">📊</span>
-                <span class="score-label">Score de risque calculé</span>
-              </div>
-              <div class="score-value-large">{{ formData.score_risque.toFixed(2) }}%</div>
-              <div class="score-bar-container">
-                <div
-                  class="score-bar-fill"
-                  :style="{ width: `${Math.min(formData.score_risque, 100)}%` }"
-                  :class="getRiskClass(formData.score_risque)"
-                ></div>
-              </div>
-              <small class="form-hint">Ce score sera utilisé dans l'analyse complète</small>
-            </div>
-          </div>
-
-          <!-- Boutons d'action -->
-          <div class="form-actions">
-            <button type="button" @click="backToUpload" class="btn btn-secondary">Annuler</button>
-            <button
-              v-if="formData.score_risque === null"
-              type="button"
-              @click="formData.score_risque = calculateRiskScore()"
-              class="btn btn-outline"
-            >
-              <span class="btn-icon">📊</span>
-              Calculer le score de risque
-            </button>
-            <button type="submit" class="btn btn-primary btn-large">
-              <span class="btn-icon">🔬</span>
-              Lancer l'analyse
-              <span class="btn-arrow">→</span>
-            </button>
-          </div>
-        </form>
       </div>
     </div>
 
@@ -289,7 +107,7 @@
           <div class="pulse-ring"></div>
           <div class="pulse-ring delay-1"></div>
           <div class="pulse-ring delay-2"></div>
-          <div class="analyzing-icon">🔬</div>
+          <span class="material-icons analyzing-icon">biotech</span>
         </div>
         <h2 class="analyzing-title">Analyse en cours...</h2>
         <p class="analyzing-text">
@@ -305,128 +123,111 @@
     <!-- Section des résultats -->
     <div v-if="showResults" class="results-section">
       <div class="results-container">
-        <!-- Résultat: Cancer Détecté -->
-        <div v-if="predictionResult === 'cancer'" class="result-card cancer-detected">
-          <div class="result-header">
-            <div class="result-icon danger">⚠️</div>
-            <h2 class="result-title">Anomalie Détectée</h2>
+        <!-- Message d'analyse - Zones détectées
+        <div
+          v-if="numDetections !== null && numDetections > 0"
+          class="analysis-banner detection-banner"
+        >
+          <span class="material-icons banner-icon">warning</span>
+          <div class="banner-content">
+            <p class="banner-text">
+              L'IA a analysé l'image et a mis en évidence les zones présentant une texture ou une
+              densité anormale susceptibles de correspondre à des lésions mammaires.
+            </p>
+            <p class="banner-subtext">
+              Les régions encadrées ou colorées indiquent les zones que le modèle considère comme
+              suspectes selon son apprentissage.
+            </p>
           </div>
+        </div> -->
 
-          <div class="result-body">
-            <div class="confidence-score">
-              <div class="score-label">Confiance du modèle</div>
-              <div class="score-value danger">{{ confidence }}%</div>
-              <div class="score-bar">
-                <div class="score-fill danger" :style="{ width: `${confidence}%` }"></div>
+        <!-- Images d'analyse -->
+        <div v-if="imageWithBoxes || maskImage" class="analysis-images-section">
+          <h2 class="section-title">
+            <span class="material-icons">image_search</span>
+            Résultats de l'analyse d'image
+          </h2>
+
+          <div class="images-grid">
+            <!-- Masque de segmentation -->
+            <div v-if="maskImage" class="analysis-image-card">
+              <div class="image-card-header">
+                <span class="material-icons">layers</span>
+                <span>Zone suspect</span>
               </div>
-            </div>
-
-            <div class="result-description">
-              <p>
-                Notre modèle d'intelligence artificielle a détecté des anomalies suspectes dans vos
-                images de mammographie. La confiance du modèle est de
-                <strong>{{ confidence }}%</strong>.
+              <img
+                :src="maskImage"
+                alt="Masque de segmentation"
+                class="analysis-image"
+                @click="openImageModal(maskImage, 'Zone suspect')"
+                title="Cliquez pour agrandir"
+              />
+              <p class="image-description">
+                <span class="material-icons description-icon">info</span>
+                Visualisation précise des régions d'intérêt identifiées
               </p>
             </div>
 
-            <div class="alert-box danger">
-              <div class="alert-icon">🏥</div>
-              <div class="alert-content">
-                <h3 class="alert-title">Action Urgente Requise</h3>
-                <p class="alert-text">
-                  Nous vous recommandons fortement de consulter un médecin spécialiste dans les plus
-                  brefs délais pour une évaluation approfondie et des examens complémentaires.
-                </p>
+            <!-- Image avec détections -->
+            <div v-if="imageWithBoxes" class="analysis-image-card">
+              <div class="image-card-header">
+                <span class="material-icons">gps_fixed</span>
+                <span>Zones détectées</span>
+                <span v-if="numDetections !== null" class="detection-badge">
+                  {{ numDetections }} zone(s)
+                </span>
               </div>
-            </div>
-
-            <div class="detected-regions">
-              <h3 class="regions-title">
-                <span class="icon">📍</span>
-                Régions suspectes identifiées
-              </h3>
-              <div class="regions-list">
-                <div v-for="(region, index) in detectedRegions" :key="index" class="region-item">
-                  <span class="region-number">{{ index + 1 }}</span>
-                  <div class="region-info">
-                    <div class="region-name">{{ region.name }}</div>
-                    <div class="region-confidence">Confiance: {{ region.confidence }}%</div>
-                  </div>
+              <img
+                :src="imageWithBoxes"
+                alt="Image avec zones détectées"
+                class="analysis-image"
+                @click="openImageModal(imageWithBoxes, 'Image avec zones détectées')"
+                title="Cliquez pour agrandir"
+              />
+              <div
+                v-if="numDetections !== null && numDetections > 0"
+                class="analysis-banner detection-banner"
+              >
+                <span class="material-icons banner-icon">warning</span>
+                <div class="banner-content">
+                  <p class="banner-text">
+                    L'IA a analysé l'image et a mis en évidence les zones présentant une texture ou
+                    une densité anormale susceptibles de correspondre à des lésions mammaires.
+                  </p>
+                  <p class="banner-subtext">
+                    Les régions encadrées ou colorées indiquent les zones que le modèle considère
+                    comme suspectes selon son apprentissage.
+                  </p>
                 </div>
               </div>
             </div>
-          </div>
-        </div>
-
-        <!-- Résultat: Pas de Cancer -->
-        <div v-else class="result-card no-cancer">
-          <div class="result-header">
-            <div class="result-icon success">✓</div>
-            <h2 class="result-title">Aucune Anomalie Détectée</h2>
-          </div>
-
-          <div class="result-body">
-            <div class="confidence-score">
-              <div class="score-label">Confiance du modèle</div>
-              <div class="score-value success">{{ confidence }}%</div>
-              <div class="score-bar">
-                <div class="score-fill success" :style="{ width: `${confidence}%` }"></div>
-              </div>
-            </div>
-
-            <div class="result-description">
-              <p>
-                Notre modèle d'intelligence artificielle n'a détecté aucune anomalie significative
-                dans vos images de mammographie. La confiance du modèle est de
-                <strong>{{ confidence }}%</strong>.
-              </p>
-            </div>
-
-            <div class="alert-box success">
-              <div class="alert-icon">✓</div>
-              <div class="alert-content">
-                <h3 class="alert-title">Résultat Rassurant</h3>
-                <p class="alert-text">
-                  Les images analysées ne présentent pas de signes évidents de cancer. Cependant,
-                  nous vous recommandons de continuer vos examens de dépistage réguliers selon les
-                  recommandations de votre médecin.
-                </p>
-              </div>
-            </div>
-
-            <div class="reminder-box">
-              <h3 class="reminder-title">
-                <span class="icon">💡</span>
-                Rappel Important
-              </h3>
-              <p class="reminder-text">
-                Cette analyse par IA est un outil d'aide au diagnostic. Elle ne remplace pas l'avis
-                d'un professionnel de santé qualifié. Consultez toujours votre médecin pour
-                interpréter ces résultats.
+            <!-- Avertissement médical -->
+            <div class="medical-disclaimer">
+              <span class="material-icons disclaimer-icon">local_hospital</span>
+              <p class="disclaimer-text">
+                Ce résultat constitue un outil d'aide à la décision clinique et ne saurait se
+                substituer à l'expertise ni à l'interprétation médicale du professionnel de santé.
               </p>
             </div>
           </div>
         </div>
+      </div>
+    </div>
 
-        <!-- Actions -->
-        <div class="result-actions">
-          <button @click="downloadReport" class="btn btn-outline">
-            <span class="btn-icon">📥</span>
-            Télécharger le rapport
-          </button>
-          <button @click="resetAnalysis" class="btn btn-secondary">Nouvelle analyse</button>
-          <RouterLink to="/" class="btn btn-primary"> Retour à l'accueil </RouterLink>
+    <!-- Modale de zoom d'image -->
+    <div v-if="showImageModal" class="image-modal" @click="closeImageModal">
+      <div class="modal-overlay"></div>
+      <div class="modal-content">
+        <button @click="closeImageModal" class="modal-close-btn">
+          <span class="material-icons">close</span>
+        </button>
+        <div class="modal-header">
+          <h3 class="modal-title">{{ modalImageTitle }}</h3>
         </div>
-
-        <!-- Disclaimer -->
-        <div class="disclaimer">
-          <p>
-            <strong>Avertissement :</strong> Cette analyse est fournie à titre informatif
-            uniquement. Elle ne constitue pas un diagnostic médical et ne remplace pas la
-            consultation d'un professionnel de santé. Consultez toujours votre médecin pour toute
-            question concernant votre santé.
-          </p>
+        <div class="modal-image-container">
+          <img :src="modalImageSrc" :alt="modalImageTitle" class="modal-image" />
         </div>
+        <p class="modal-hint">Cliquez n'importe où pour fermer</p>
       </div>
     </div>
   </div>
@@ -434,32 +235,27 @@
 
 <script setup>
 import { ref } from 'vue'
+import analyseService from '@/services/analyse-service'
 
 const fileInput = ref(null)
 const uploadedImages = ref([])
 const isDragging = ref(false)
 const isAnalyzing = ref(false)
 const showResults = ref(false)
-const showRiskForm = ref(false)
 const analysisProgress = ref(0)
-const predictionResult = ref('') // 'cancer' or 'no-cancer'
+
+// Résultats de l'analyse du backend
+const imageWithBoxes = ref(null)
+const maskImage = ref(null)
+const numDetections = ref(null)
+const analysisMessage = ref('')
 const confidence = ref(0)
 const detectedRegions = ref([])
 
-// Données du formulaire de risque
-const formData = ref({
-  age: null,
-  imc: null,
-  ant_familiaux: null, // 0 ou 1
-  ant_personnels: null, // 0 ou 1
-  age_premieres_regles: null,
-  age_premier_enfant: null,
-  nb_enfants: 0,
-  mode_vie: '', // "sain", "modéré", "à risque"
-  tabac: null, // 0 ou 1
-  alcool: null, // 0 ou 1
-  activite_physique: '', // "faible", "moyen", "élevé"
-})
+// Modale de zoom d'image
+const showImageModal = ref(false)
+const modalImageSrc = ref('')
+const modalImageTitle = ref('')
 
 const handleFileSelect = (event) => {
   const files = Array.from(event.target.files)
@@ -513,153 +309,65 @@ const formatFileSize = (bytes) => {
   return (bytes / (1024 * 1024)).toFixed(1) + ' MB'
 }
 
-const showRiskFormStep = () => {
-  showRiskForm.value = true
-}
-
-const backToUpload = () => {
-  showRiskForm.value = false
-}
-
-const calculateRiskScore = () => {
-  // Algorithme simplifié de calcul du score de risque
-  // Basé sur les facteurs de risque fournis
-  let score = 0
-
-  // Facteur âge (0-20 points)
-  if (formData.value.age) {
-    if (formData.value.age < 40) score += 3
-    else if (formData.value.age < 50) score += 8
-    else if (formData.value.age < 60) score += 15
-    else score += 20
-  }
-
-  // Facteur IMC (0-10 points)
-  if (formData.value.imc) {
-    if (formData.value.imc < 25) score += 2
-    else if (formData.value.imc < 30) score += 5
-    else score += 10
-  }
-
-  // Antécédents familiaux (0-15 points)
-  if (formData.value.ant_familiaux === 1) score += 15
-
-  // Antécédents personnels (0-15 points)
-  if (formData.value.ant_personnels === 1) score += 15
-
-  // Âge premières règles (0-8 points)
-  if (formData.value.age_premieres_regles && formData.value.age_premieres_regles <= 11) {
-    score += 8
-  }
-
-  // Âge premier enfant (0-10 points)
-  if (formData.value.age_premier_enfant === 0 && formData.value.age >= 30) {
-    score += 10
-  } else if (formData.value.age_premier_enfant >= 35) {
-    score += 7
-  }
-
-  // Nombre d'enfants (bonus si élevé)
-  if (formData.value.nb_enfants >= 3) {
-    score -= 3
-  }
-
-  // Mode de vie (0-10 points)
-  if (formData.value.mode_vie === 'sain') score += 2
-  else if (formData.value.mode_vie === 'modéré') score += 6
-  else if (formData.value.mode_vie === 'à risque') score += 10
-
-  // Tabac (0-7 points)
-  if (formData.value.tabac === 1) score += 7
-
-  // Alcool (0-6 points)
-  if (formData.value.alcool === 1) score += 6
-
-  // Activité physique (bonus si élevée)
-  if (formData.value.activite_physique === 'élevé') score -= 5
-  else if (formData.value.activite_physique === 'faible') score += 5
-
-  return Math.max(0, score)
-}
-
-const getRiskClass = (score) => {
-  if (score < 20) return 'risk-low'
-  if (score < 40) return 'risk-medium'
-  return 'risk-high'
-}
-
-const submitForm = async () => {
-  // Calculer le score de risque avant de soumettre
-  formData.value.score_risque = calculateRiskScore()
-
-  // Validation du formulaire
-  console.log('Données du formulaire:', formData.value)
-  console.log('Images à analyser:', uploadedImages.value)
-
-  // Lancer l'analyse avec les données du formulaire et les images
-  startAnalysis()
-}
-
 const startAnalysis = async () => {
-  isAnalyzing.value = true
-  showRiskForm.value = false
-  analysisProgress.value = 0
-
-  // Simuler la progression
-  const progressInterval = setInterval(() => {
-    analysisProgress.value += 10
-    if (analysisProgress.value >= 100) {
-      clearInterval(progressInterval)
-    }
-  }, 300)
-
-  // Simuler l'appel à l'API du modèle d'analyse d'images
-  await new Promise((resolve) => setTimeout(resolve, 3500))
-
-  // Ici vous appellerez votre API d'analyse d'images avec les données du formulaire
-  // const apiFormData = new FormData()
-  // uploadedImages.value.forEach((img, index) => {
-  //   apiFormData.append(`image_${index}`, img.file)
-  // })
-  // // Ajouter les données de risque
-  // apiFormData.append('age', formData.value.age)
-  // apiFormData.append('imc', formData.value.imc)
-  // apiFormData.append('ant_familiaux', formData.value.ant_familiaux)
-  // apiFormData.append('mutations_genetiques', formData.value.mutations_genetiques)
-  // apiFormData.append('mode_vie', formData.value.mode_vie)
-  // apiFormData.append('densite_mammaire', formData.value.densite_mammaire)
-  // apiFormData.append('tabac', formData.value.tabac)
-  // apiFormData.append('alcool', formData.value.alcool)
-  // apiFormData.append('score_risque', formData.value.score_risque)
-  //
-  // const response = await fetch('/api/analyze-mammography', {
-  //   method: 'POST',
-  //   body: apiFormData
-  // })
-  // const result = await response.json()
-
-  // Simulation de résultat aléatoire
-  const randomResult = Math.random()
-
-  if (randomResult > 0.6) {
-    // Cancer détecté
-    predictionResult.value = 'cancer'
-    confidence.value = Math.floor(Math.random() * 20) + 75 // 75-95%
-    detectedRegions.value = [
-      { name: 'Quadrant supérieur externe droit', confidence: 87 },
-      { name: 'Région rétro-aréolaire gauche', confidence: 72 },
-    ]
-  } else {
-    // Pas de cancer
-    predictionResult.value = 'no-cancer'
-    confidence.value = Math.floor(Math.random() * 15) + 80 // 80-95%
+  if (uploadedImages.value.length === 0) {
+    alert('Veuillez télécharger au moins une image')
+    return
   }
 
-  console.log('Images envoyées au modèle:', uploadedImages.value)
-  console.log('Résultat de prédiction:', predictionResult.value)
+  try {
+    isAnalyzing.value = true
+    analysisProgress.value = 0
 
-  isAnalyzing.value = false
-  showResults.value = true
+    // Simuler la progression
+    const progressInterval = setInterval(() => {
+      if (analysisProgress.value < 90) {
+        analysisProgress.value += 10
+      }
+    }, 300)
+
+    // Analyser la première image (on peut aussi analyser toutes les images si nécessaire)
+    const firstImage = uploadedImages.value[0].file
+    console.log("Envoi de l'image au backend:", firstImage.name)
+
+    const response = await analyseService.analyzeImage(firstImage)
+
+    clearInterval(progressInterval)
+    analysisProgress.value = 100
+
+    console.log('Réponse du backend:', response)
+
+    // Extraire les données de la réponse
+    if (response.data) {
+      imageWithBoxes.value = response.data.image_with_boxes || null
+      maskImage.value = response.data.mask || null
+      numDetections.value =
+        response.data.num_detections !== undefined ? response.data.num_detections : null
+      analysisMessage.value = response.data.message || ''
+
+      // Calculer confiance et régions détectées si disponibles
+      if (numDetections.value > 0) {
+        confidence.value = Math.floor(Math.random() * 20) + 75 // 75-95%
+        // Simuler les régions détectées (peut être fourni par le backend plus tard)
+        detectedRegions.value = [
+          { name: 'Zone suspecte 1', confidence: 87 },
+          { name: 'Zone suspecte 2', confidence: 72 },
+        ].slice(0, numDetections.value)
+      } else {
+        confidence.value = Math.floor(Math.random() * 15) + 80 // 80-95%
+        detectedRegions.value = []
+      }
+    }
+
+    // Afficher les résultats
+    await new Promise((resolve) => setTimeout(resolve, 500)) // Petite pause pour l'effet visuel
+    isAnalyzing.value = false
+    showResults.value = true
+  } catch (error) {
+    console.error("Erreur lors de l'analyse:", error)
+    alert("Erreur lors de l'analyse: " + error.message)
+    isAnalyzing.value = false
+  }
 }
 
 const downloadReport = () => {
@@ -671,28 +379,32 @@ const downloadReport = () => {
 const resetAnalysis = () => {
   uploadedImages.value = []
   showResults.value = false
-  showRiskForm.value = false
   analysisProgress.value = 0
-  predictionResult.value = ''
   confidence.value = 0
   detectedRegions.value = []
-  // Réinitialiser le formulaire
-  formData.value = {
-    age: null,
-    imc: null,
-    ant_familiaux: null,
-    ant_personnels: null,
-    age_premieres_regles: null,
-    age_premier_enfant: null,
-    nb_enfants: 0,
-    mode_vie: '',
-    tabac: null,
-    alcool: null,
-    activite_physique: '',
-  }
+  imageWithBoxes.value = null
+  maskImage.value = null
+  numDetections.value = null
+  analysisMessage.value = ''
   if (fileInput.value) {
     fileInput.value.value = ''
   }
+}
+
+const openImageModal = (imageSrc, imageTitle) => {
+  modalImageSrc.value = imageSrc
+  modalImageTitle.value = imageTitle
+  showImageModal.value = true
+  // Empêcher le scroll de la page quand la modale est ouverte
+  document.body.style.overflow = 'hidden'
+}
+
+const closeImageModal = () => {
+  showImageModal.value = false
+  modalImageSrc.value = ''
+  modalImageTitle.value = ''
+  // Réactiver le scroll
+  document.body.style.overflow = 'auto'
 }
 </script>
 
@@ -767,6 +479,13 @@ const resetAnalysis = () => {
 .info-icon {
   font-size: 2.5rem;
   margin-bottom: 1rem;
+  color: #667eea;
+}
+
+.list-icon {
+  font-size: 1.2rem;
+  color: #48bb78;
+  margin-right: 0.5rem;
 }
 
 .info-title {
@@ -829,6 +548,7 @@ const resetAnalysis = () => {
   font-size: 5rem;
   margin-bottom: 1.5rem;
   opacity: 0.5;
+  color: #667eea;
 }
 
 .upload-title {
@@ -902,6 +622,7 @@ const resetAnalysis = () => {
 .file-icon {
   font-size: 3rem;
   margin-bottom: 0.5rem;
+  color: #667eea;
 }
 
 .file-type {
@@ -942,11 +663,14 @@ const resetAnalysis = () => {
   border: none;
   border-radius: 50%;
   cursor: pointer;
-  font-weight: 800;
   transition: all 0.3s ease;
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.remove-btn .material-icons {
+  font-size: 1.25rem;
 }
 
 .remove-btn:hover {
@@ -1116,6 +840,7 @@ const resetAnalysis = () => {
   align-items: center;
   justify-content: center;
   font-size: 3rem;
+  color: white;
   animation: rotate 3s linear infinite;
 }
 
@@ -1195,6 +920,9 @@ const resetAnalysis = () => {
   align-items: center;
   justify-content: center;
   border-radius: 50%;
+}
+
+.result-icon .material-icons {
   font-size: 4rem;
 }
 
@@ -1299,6 +1027,7 @@ const resetAnalysis = () => {
 .alert-icon {
   font-size: 2rem;
   flex-shrink: 0;
+  margin-right: 0.5rem;
 }
 
 .alert-content {
@@ -1475,7 +1204,9 @@ const resetAnalysis = () => {
 .score-bar-fill {
   height: 100%;
   border-radius: 12px;
-  transition: width 0.5s ease, background 0.3s ease;
+  transition:
+    width 0.5s ease,
+    background 0.3s ease;
 }
 
 .score-bar-fill.risk-low {
@@ -1583,6 +1314,321 @@ const resetAnalysis = () => {
   border-top: 2px solid #e2e8f0;
 }
 
+/* Analysis Banner */
+.analysis-banner {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.5rem;
+  background: linear-gradient(135deg, #3b82f610 0%, #2563eb10 100%);
+  border-radius: 16px;
+  border-left: 4px solid #3b82f6;
+  margin-bottom: 2rem;
+}
+
+/* Detection Banner - Warning style */
+.detection-banner {
+  background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+  border-left: 4px solid #f59e0b;
+  align-items: flex-start;
+  padding: 2rem;
+}
+
+.detection-banner .banner-icon {
+  font-size: 2rem;
+  color: #f59e0b;
+  flex-shrink: 0;
+  margin-top: 0.25rem;
+}
+
+.banner-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.banner-icon {
+  font-size: 1.75rem;
+  color: #3b82f6;
+}
+
+.banner-text {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: #92400e;
+  line-height: 1.6;
+  margin: 0;
+}
+
+.banner-subtext {
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: #b45309;
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* Medical Disclaimer */
+.medical-disclaimer {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 1.75rem;
+  background: #eff6ff;
+  border-radius: 12px;
+  border-left: 4px solid #2563eb;
+  margin-bottom: 2rem;
+}
+
+.disclaimer-icon {
+  font-size: 1.75rem;
+  color: #2563eb;
+  flex-shrink: 0;
+  margin-top: 0.125rem;
+}
+
+.disclaimer-text {
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: #1e40af;
+  line-height: 1.6;
+  margin: 0;
+  font-style: italic;
+}
+
+/* Analysis Images Section */
+.analysis-images-section {
+  background: #f7fafc;
+  padding: 2.5rem;
+  border-radius: 24px;
+  margin-bottom: 2rem;
+  max-width: 100%;
+}
+
+.section-title {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 1.75rem;
+  font-weight: 800;
+  color: #2d3748;
+  margin-bottom: 2rem;
+  text-align: center;
+  justify-content: center;
+}
+
+.section-title .material-icons {
+  font-size: 2rem;
+  color: #667eea;
+}
+
+.images-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+  gap: 2rem;
+  max-width: 100%;
+}
+
+.analysis-image-card {
+  background: white;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+  transition: all 0.3s ease;
+}
+
+.analysis-image-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.18);
+}
+
+.image-card-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1.25rem 1.5rem;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  font-weight: 700;
+  font-size: 1.1rem;
+}
+
+.image-card-header .material-icons {
+  font-size: 1.5rem;
+}
+
+.detection-badge {
+  margin-left: auto;
+  padding: 0.5rem 1rem;
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 16px;
+  font-size: 0.95rem;
+  font-weight: 700;
+  backdrop-filter: blur(10px);
+  border: 2px solid rgba(255, 255, 255, 0.4);
+}
+
+.analysis-image {
+  width: 100%;
+  min-height: 400px;
+  max-height: 600px;
+  height: auto;
+  object-fit: contain;
+  display: block;
+  background: #f8fafc;
+  cursor: zoom-in;
+  transition: transform 0.3s ease;
+}
+
+.analysis-image:hover {
+  transform: scale(1.02);
+}
+
+.image-description {
+  padding: 1.25rem 1.5rem;
+  color: #4a5568;
+  font-size: 1rem;
+  line-height: 1.6;
+  margin: 0;
+  font-weight: 500;
+  background: #f8fafc;
+  border-top: 2px solid #e2e8f0;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.description-icon {
+  font-size: 1.25rem;
+  color: #667eea;
+  flex-shrink: 0;
+}
+
+/* Image Modal */
+.image-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.modal-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.9);
+  backdrop-filter: blur(10px);
+}
+
+.modal-content {
+  position: relative;
+  z-index: 10000;
+  max-width: 95vw;
+  max-height: 95vh;
+  background: white;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+  animation: zoomIn 0.3s ease;
+}
+
+@keyframes zoomIn {
+  from {
+    transform: scale(0.9);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.modal-close-btn {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  z-index: 10001;
+  width: 48px;
+  height: 48px;
+  background: rgba(0, 0, 0, 0.8);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+}
+
+.modal-close-btn:hover {
+  background: rgba(255, 0, 0, 0.9);
+  transform: scale(1.1) rotate(90deg);
+}
+
+.modal-close-btn .material-icons {
+  font-size: 1.75rem;
+}
+
+.modal-header {
+  padding: 1.5rem 2rem;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+}
+
+.modal-title {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.modal-image-container {
+  max-height: calc(95vh - 180px);
+  overflow: auto;
+  background: #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+
+.modal-image {
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+  object-fit: contain;
+  display: block;
+}
+
+.modal-hint {
+  padding: 1rem;
+  text-align: center;
+  color: #718096;
+  font-size: 0.9rem;
+  margin: 0;
+  background: #f7fafc;
+}
+
 /* Responsive */
 @media (max-width: 768px) {
   .analyse-page {
@@ -1650,6 +1696,35 @@ const resetAnalysis = () => {
 
   .form-actions .btn {
     width: 100%;
+  }
+
+  /* Images responsive */
+  .images-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .analysis-image {
+    min-height: 300px;
+    max-height: 500px;
+  }
+
+  .section-title {
+    font-size: 1.35rem;
+  }
+
+  .analysis-images-section {
+    padding: 1.5rem;
+  }
+
+  .image-card-header {
+    padding: 1rem;
+    font-size: 0.95rem;
+  }
+
+  .detection-badge {
+    font-size: 0.8rem;
+    padding: 0.35rem 0.75rem;
   }
 }
 </style>
