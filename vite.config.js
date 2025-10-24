@@ -16,4 +16,8 @@ export default defineConfig({
       '@': fileURLToPath(new URL('./src', import.meta.url)),
     },
   },
+  allowedHosts: [
+    'projet-cancer-front.onrender.com', // ✅ autorise ton domaine Render
+    'localhost', // pour les tests locaux
+  ],
 })
