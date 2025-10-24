@@ -5,7 +5,7 @@
       <div class="login-branding">
         <div class="branding-content">
           <div class="brand-logo">
-            <span class="logo-icon">🏥</span>
+            <span class="material-icons logo-icon">local_hospital</span>
             <h1 class="brand-title">Cancer Breast</h1>
           </div>
           <p class="brand-description">
@@ -13,15 +13,15 @@
           </p>
           <div class="features-list">
             <div class="feature-item">
-              <span class="feature-icon">✓</span>
+              <span class="material-icons feature-icon">check_circle</span>
               <span class="feature-text">Analyse rapide et précise</span>
             </div>
             <div class="feature-item">
-              <span class="feature-icon">✓</span>
+              <span class="material-icons feature-icon">check_circle</span>
               <span class="feature-text">Évaluation des risques personnalisée</span>
             </div>
             <div class="feature-item">
-              <span class="feature-icon">✓</span>
+              <span class="material-icons feature-icon">check_circle</span>
               <span class="feature-text">Résultats détaillés et confidentiels</span>
             </div>
           </div>
@@ -40,7 +40,7 @@
             <!-- Email -->
             <div class="form-group">
               <label for="email" class="form-label">
-                <span class="label-icon">📧</span>
+                <span class="material-icons label-icon">email</span>
                 Adresse email
               </label>
               <input
@@ -58,7 +58,7 @@
             <!-- Password -->
             <div class="form-group">
               <label for="password" class="form-label">
-                <span class="label-icon">🔒</span>
+                <span class="material-icons label-icon">lock</span>
                 Mot de passe
               </label>
               <div class="password-input-wrapper">
@@ -79,7 +79,7 @@
                     showPassword ? 'Masquer le mot de passe' : 'Afficher le mot de passe'
                   "
                 >
-                  {{ showPassword ? '👁️' : '👁️‍🗨️' }}
+                  <span class="material-icons">{{ showPassword ? 'visibility' : 'visibility_off' }}</span>
                 </button>
               </div>
               <span v-if="errors.password" class="error-message">{{ errors.password }}</span>
@@ -96,14 +96,14 @@
 
             <!-- Error message -->
             <div v-if="loginError" class="alert alert-error">
-              <span class="alert-icon">⚠️</span>
+              <span class="material-icons alert-icon">error</span>
               <span>{{ loginError }}</span>
             </div>
 
             <!-- Submit button -->
             <button type="submit" class="btn-submit" :disabled="isLoading">
               <span v-if="!isLoading" class="btn-content">
-                <span class="btn-icon">🔓</span>
+                <span class="material-icons btn-icon">login</span>
                 Se connecter
               </span>
               <span v-else class="btn-loading">

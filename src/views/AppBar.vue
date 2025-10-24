@@ -4,7 +4,7 @@
       <!-- Logo / Brand -->
       <div class="app-bar-brand">
         <a href="/" class="brand-link">
-          <span class="brand-icon">🏥</span>
+          <span class="material-icons brand-icon">local_hospital</span>
           <span class="brand-name">Cancer Breast</span>
         </a>
       </div>
@@ -30,28 +30,28 @@
       <div class="auth-section">
         <div v-if="isAuthenticated" class="user-menu">
           <button @click="toggleUserMenu" class="user-button">
-            <span class="user-icon">👤</span>
+            <span class="material-icons user-icon">account_circle</span>
             <span class="user-name">{{ userName }}</span>
-            <span class="dropdown-arrow" :class="{ 'is-open': userMenuOpen }">▼</span>
+            <span class="material-icons dropdown-arrow" :class="{ 'is-open': userMenuOpen }">expand_more</span>
           </button>
           <div v-if="userMenuOpen" class="user-dropdown">
             <a href="#" class="dropdown-item">
-              <span class="dropdown-icon">⚙️</span>
+              <span class="material-icons dropdown-icon">settings</span>
               Paramètres
             </a>
             <a href="#" class="dropdown-item">
-              <span class="dropdown-icon">👤</span>
+              <span class="material-icons dropdown-icon">person</span>
               Mon profil
             </a>
             <hr class="dropdown-divider" />
             <button @click="handleLogout" class="dropdown-item logout">
-              <span class="dropdown-icon">🚪</span>
+              <span class="material-icons dropdown-icon">logout</span>
               Déconnexion
             </button>
           </div>
         </div>
         <RouterLink v-else to="/login" class="btn-login" @click="closeMenu">
-          <span class="btn-icon">🔓</span>
+          <span class="material-icons btn-icon">login</span>
           Connexion
         </RouterLink>
       </div>

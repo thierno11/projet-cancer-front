@@ -14,7 +14,7 @@
 
     <!-- Disclaimer -->
     <div class="disclaimer-box">
-      <div class="disclaimer-icon">⚠️</div>
+      <span class="material-icons disclaimer-icon">warning</span>
       <div class="disclaimer-content">
         <h3 class="disclaimer-title">Information Importante</h3>
         <p class="disclaimer-text">
@@ -380,7 +380,7 @@
 
       <!-- Message d'erreur API -->
       <div v-if="apiError" class="error-message">
-        <span class="error-icon">⚠️</span>
+        <span class="material-icons error-icon">error</span>
         <span>{{ apiError }}</span>
       </div>
 
@@ -415,7 +415,7 @@
                 'low-risk': riskLevel === 'low',
               }"
             >
-              {{ riskLevel === 'high' ? '⚠️' : riskLevel === 'moderate' ? '⚡' : '✓' }}
+              <span class="material-icons">{{ riskLevel === 'high' ? 'warning' : riskLevel === 'moderate' ? 'bolt' : 'check_circle' }}</span>
             </div>
 
             <h2 class="result-title">
@@ -457,7 +457,7 @@
             <!-- Détails des facteurs de risque -->
             <div class="risk-factors" v-if="identifiedFactors.length > 0">
               <h3 class="factors-title">
-                <span class="icon">📊</span>
+                <span class="material-icons icon">analytics</span>
                 Facteurs de risque identifiés
               </h3>
               <div class="factors-list">
@@ -478,7 +478,7 @@
             <!-- Recommandations d'examens -->
             <div class="recommendations">
               <h3 class="recommendations-title">
-                <span class="icon">🏥</span>
+                <span class="material-icons icon">local_hospital</span>
                 Examens recommandés
               </h3>
               <div class="recommendations-grid">

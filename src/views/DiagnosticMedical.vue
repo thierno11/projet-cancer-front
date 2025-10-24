@@ -12,7 +12,7 @@
 
     <!-- Info Box -->
     <div class="info-box">
-      <div class="info-icon">👨‍⚕️</div>
+      <span class="material-icons info-icon">medical_services</span>
       <div class="info-content">
         <h3 class="info-title">Interface Médicale</h3>
         <p class="info-text">
@@ -423,7 +423,7 @@
 
       <!-- Message d'erreur API -->
       <div v-if="apiError" class="error-message">
-        <span class="error-icon">⚠️</span>
+        <span class="material-icons error-icon">error</span>
         <div class="error-content">
           <strong>Erreur:</strong> {{ apiError }}
         </div>

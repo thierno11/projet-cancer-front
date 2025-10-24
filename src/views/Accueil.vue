@@ -65,7 +65,7 @@
         >
           <div class="timeline-number">{{ index + 1 }}</div>
           <div class="timeline-content">
-            <div class="timeline-icon">{{ step.icon }}</div>
+            <span class="material-icons timeline-icon">{{ step.icon }}</span>
             <h3 class="timeline-title">{{ step.title }}</h3>
             <p class="timeline-description">{{ step.description }}</p>
           </div>
@@ -118,22 +118,22 @@ const features = [
 
 const processSteps = [
   {
-    icon: '📝',
+    icon: 'edit_note',
     title: 'Remplissez le formulaire',
     description: 'Complétez le questionnaire médical détaillé avec vos informations et symptômes',
   },
   {
-    icon: '📤',
+    icon: 'upload_file',
     title: 'Téléchargez vos examens',
     description: 'Importez vos images médicales (mammographie, échographie, IRM)',
   },
   {
-    icon: '🔬',
+    icon: 'biotech',
     title: 'Analyse par IA',
     description: 'Notre algorithme analyse vos données en quelques minutes',
   },
   {
-    icon: '📋',
+    icon: 'assignment',
     title: 'Recevez vos résultats',
     description: 'Obtenez un rapport détaillé avec recommandations et suivi personnalisé',
   },
